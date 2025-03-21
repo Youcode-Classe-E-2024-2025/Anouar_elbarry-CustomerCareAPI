@@ -7,8 +7,8 @@ class UserRepository{
         $this->userModel = $userModel;
     }
 
-    public function findbyusername($username){
-       return $this->userModel->where('name',$username)->first();
+    public function findUserByEmail($email){
+       return $this->userModel->where('email',$email)->first();
     }
     public function isEmailUnique($email){
        return $this->userModel->where('email',$email)->doesntExist();
