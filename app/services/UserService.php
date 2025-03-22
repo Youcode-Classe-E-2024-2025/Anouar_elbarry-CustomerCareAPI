@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\services;
+namespace App\services;
 use App\Repositories\UserRepository;
 use Hash;
 use Illuminate\Support\Facades\Auth;
