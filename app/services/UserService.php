@@ -5,7 +5,6 @@ use App;
 use App\Repositories\UserRepository;
 use Hash;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 class UserService
 {
     protected $userRepository;
@@ -27,8 +26,9 @@ class UserService
     {    
         $user = $this->userRepository->findUserByEmail($userData['email']);
         if($user && Hash::check($userData['password'],$user->password)){
+            $user->email_verified_at = now();
             Auth::login($user);
-            return true;
+            return $user;
         }else{
             return false;
         }
@@ -41,5 +41,10 @@ class UserService
             return true;
          }
          return false;
+    }
+
+    public function  getUsers(){
+        $users = $this->userRepository->getUsers();
+        return $users;
     }
 }
