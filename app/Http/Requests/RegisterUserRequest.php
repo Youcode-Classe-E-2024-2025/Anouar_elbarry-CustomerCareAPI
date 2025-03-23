@@ -11,7 +11,7 @@ class RegisterUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,10 +22,10 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|unique:users|max:255',
+            'name' => 'required|string|unique:users|max:255',
             'email' => 'required|email|unique:users|max:255',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|enum:client,agent,admin'
+            'role' => 'required|string|in:client,agent,admin'
         ];
     }
 }

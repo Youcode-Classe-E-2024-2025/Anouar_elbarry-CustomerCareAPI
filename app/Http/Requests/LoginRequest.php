@@ -11,7 +11,7 @@ class LoginRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,14 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required','email'],
-            'name' => ['required','string']
+            'password' => ['required','string','min:8']
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'email.exists' => 'No account found with this email address.',
+            'password.min' => 'Password must be at least 8 characters long.'
         ];
     }
 }
