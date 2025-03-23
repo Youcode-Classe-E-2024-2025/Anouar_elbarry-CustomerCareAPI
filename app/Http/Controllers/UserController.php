@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\services\UserService;
 use Illuminate\Http\Request;
-use App\services;
 class UserController extends Controller
 {
     protected $userService;
@@ -29,12 +29,13 @@ class UserController extends Controller
             'message' => 'User registration failed. Email exists.'
         ],422);
         }
-    public function login(Request $request){
+    public function login(LoginRequest $request){
         $validated = $request->validated();
         $user = $this->userService->login($validated);
         if($user){
             return response()->json([
                 'message' => 'user loged successfully',
+                'token' => $user->createToken('API Token')->plainTextToken,
                 'user' => $user
             ],200);
         }
@@ -54,5 +55,15 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Unable to logout'
         ],400);
+    }
+    public function users(){
+        $users = $this->userService->getUsers();
+        if($users){
+            return response()->json([
+                'users' => $users
+            ],200);}
+            return response()->json([
+                'message' => 'get users failed'
+            ]);
     }
 }
