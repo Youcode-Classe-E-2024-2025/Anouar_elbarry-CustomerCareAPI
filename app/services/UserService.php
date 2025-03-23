@@ -1,9 +1,11 @@
 <?php
 
 namespace App\services;
+use App;
 use App\Repositories\UserRepository;
 use Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 class UserService
 {
     protected $userRepository;
@@ -33,7 +35,11 @@ class UserService
     }
     public function logout()
     {
-         Auth::logout();
-         return true;
+         $user = Auth::user();
+         if($user){
+            $user->tokens()->delete();
+            return true;
+         }
+         return false;
     }
 }
