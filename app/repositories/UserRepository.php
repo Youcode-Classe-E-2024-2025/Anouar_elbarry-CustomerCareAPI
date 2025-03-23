@@ -17,5 +17,8 @@ class UserRepository{
     public function createUser(array $userData){
         return $this->userModel->create($userData);
     }
+    public function getUsers(){
+        return User::all();
+    }
 
 }
