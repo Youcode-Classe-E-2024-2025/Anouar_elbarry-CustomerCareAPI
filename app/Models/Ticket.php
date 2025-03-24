@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket extends Model
 {
     use HasFactory;
-    protected $faillable = [
+    protected $fillable  = [
         "user_id",
         "agent_id",
         "title",
