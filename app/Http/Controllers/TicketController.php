@@ -88,6 +88,14 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket)
     {
-        //
+        $isDeleted = $this->ticketService->destroy($ticket->id);
+        if($isDeleted){
+            return response()->json([
+                'message' => 'ticket Deleted successfully',
+            ],200);
+        }
+        return response()->json([
+            'message' => 'faild to delet ticket'
+        ],500);
     }
 }
