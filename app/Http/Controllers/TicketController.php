@@ -69,7 +69,18 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        $validatedData = $request->validated();
+        $ticket = $this->ticketService->update($validatedData,$ticket->id);
+        if($ticket){
+            return response()->json([
+                'message' => 'ticket updated successfully',
+                'ticket' => $ticket
+            ],201);
+        } 
+
+        return response()->json([
+            'message' => 'ticket failed to update'
+        ],500);
     }
 
     /**
