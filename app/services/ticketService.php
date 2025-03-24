@@ -12,8 +12,18 @@ class TicketService{
         return $tickets;
     }
     public function create(array $ticketData){
-        $ticket = Ticket::create($ticketData);
-        return $ticket;
+        try{
+            $ticket = Ticket::create($ticketData);
+            return $ticket;
+        }catch(\Exception $e){
+            \Log::error('Ticket creation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'data' => $ticketData
+            ]);
+            return false;
+        }
+        
     }
     
     public function destroy(int $ticketId){
@@ -31,6 +41,7 @@ class TicketService{
         try{
          $ticket = Ticket::findOrFail($ticketId);
          $ticket= $ticket->update($ticketData);
+         return true;
     }catch(\Exception $e){
         \Log::error($e);
         return false;
