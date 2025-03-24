@@ -7,7 +7,6 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\services\TicketService;
-use function PHPUnit\Framework\returnSelf;
 
 class TicketController extends Controller
 {
