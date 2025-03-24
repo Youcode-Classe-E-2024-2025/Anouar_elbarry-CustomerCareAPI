@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TicketRequest;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\services\TicketService;
+use function PHPUnit\Framework\returnSelf;
 
 class TicketController extends Controller
 {
@@ -27,9 +30,21 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TicketRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+        $validatedData['user_id'] = Auth::id();
+        $ticket = $this->ticketService->create($validatedData);
+        if($ticket){
+            return response()->json([
+                'message' => 'ticket created successfully',
+                'ticket' => $ticket
+            ],201);
+        } 
+
+        return response()->json([
+            'message' => 'ticket failed to create'
+        ],500);
     }
 
     /**
