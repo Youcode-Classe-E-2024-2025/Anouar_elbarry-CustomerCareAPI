@@ -1,9 +1,16 @@
 <?php
 namespace App\services;
 use App\Models\Ticket;
+use Auth;
 class TicketService{
 
     
+    public function getAllUsersTickets(){
+        $tickets = Ticket::where('user_id',Auth::id())
+        ->orderBy('created_at','desc')
+        ->get();
+        return $tickets;
+    }
     public function create(array $ticketData){
         $ticket = Ticket::create($ticketData);
         return $ticket;
