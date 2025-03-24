@@ -52,7 +52,16 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        // Ensure the ticket belongs to the authenticated user
+        if ($ticket->user_id !== Auth::id()) {
+            return response()->json([
+                'message' => 'Unauthorized to view this ticket'
+            ], 403);
+        }
+
+        return response()->json([
+            'ticket' => $ticket
+        ], 200);
     }
 
     /**
