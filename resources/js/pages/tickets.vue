@@ -114,14 +114,27 @@
 
 <script>
 import axios from 'axios'
-axios.defaults.baseURL = 'http://localhost:8000'
-
-axios.interceptors.request.use(config => {
-    const token = localStorage.getItem('token')
-    if (token){
-        config.headers['Authorization'] = `Baerer ${token}`
+// import router from '../router'
+const authAxios = axios.create({
+    baseURL: 'http://localhost:8000',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
     }
 })
+authAxios.interceptors.request.use(config => {
+    const token = localStorage.getItem('token')
+    console.log(token);
+    
+    if (token){
+        config.headers['Authorization'] = `Bearer ${token.replace('Bearer ', '')}`
+    }
+    return config
+},
+error => {
+    return Promise.reject(error)
+})
+
 export default {
     data() {
         return {
@@ -156,7 +169,7 @@ export default {
         },
         submitTicket() {
             // Implement actual API call to backend
-             axios.post('http://localhost:8000/api/ticket', this.newTicket)
+             authAxios.post('/api/ticket', this.newTicket)
                  .then(response => {
                      this.tickets.unshift(response.data)
                      this.closeCreateTicketModal()
@@ -167,7 +180,7 @@ export default {
                  })
         },
         fetchTickets(){
-            axios.get('http://localhost:8000/api/ticket')
+            authAxios.get('/api/ticket')
             .then(response => {
                 this.tickets = response.data.tickets
             })
@@ -175,6 +188,10 @@ export default {
                 console.error('Error fetching tickets', error)
             })
         }
+    },
+    created() {
+        // Fetch tickets when the component is created
+        this.fetchTickets()
     }
 }
 </script>
