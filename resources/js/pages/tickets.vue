@@ -114,6 +114,14 @@
 
 <script>
 import axios from 'axios'
+axios.defaults.baseURL = 'http://localhost:8000'
+
+axios.interceptors.request.use(config => {
+    const token = localStorage.getItem('token')
+    if (token){
+        config.headers['Authorization'] = `Baerer ${token}`
+    }
+})
 export default {
     data() {
         return {
@@ -122,32 +130,7 @@ export default {
                 title: '',
                 description: ''
             },
-            tickets: [
-                {
-                    id: 1,
-                    title: 'Website Performance Issue',
-                    description: 'Experiencing slow page load times during peak hours',
-                    status: 'In Progress',
-                    created_at: '2024-03-20T10:30:00Z',
-                    updated_at: '2024-03-25T14:45:00Z'
-                },
-                {
-                    id: 2,
-                    title: 'Login Authentication Problem',
-                    description: 'Unable to log in with my credentials',
-                    status: 'Open',
-                    created_at: '2024-03-22T15:20:00Z',
-                    updated_at: '2024-03-22T15:20:00Z'
-                },
-                {
-                    id: 3,
-                    title: 'Billing Inquiry Resolved',
-                    description: 'Clarification on recent invoice',
-                    status: 'Resolved',
-                    created_at: '2024-03-15T09:10:00Z',
-                    updated_at: '2024-03-18T11:30:00Z'
-                }
-            ]
+            tickets: []
         }
     },
     methods: {
@@ -173,14 +156,24 @@ export default {
         },
         submitTicket() {
             // Implement actual API call to backend
-             axios.post('/api/tickets', this.newTicket)
+             axios.post('http://localhost:8000/api/ticket', this.newTicket)
                  .then(response => {
                      this.tickets.unshift(response.data)
                      this.closeCreateTicketModal()
+                     this.fetchTickets()
                  })
                  .catch(error => {
                      console.error('Error creating ticket:', error)
                  })
+        },
+        fetchTickets(){
+            axios.get('http://localhost:8000/api/ticket')
+            .then(response => {
+                this.tickets = response.data.tickets
+            })
+            .catch(error =>{
+                console.error('Error fetching tickets', error)
+            })
         }
     }
 }
