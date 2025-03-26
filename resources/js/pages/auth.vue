@@ -28,18 +28,20 @@
     </div> -->
 
             <!-- Sign In Form -->
-            <form id="signin-form" class="space-y-6">
+            <form id="signin-form"
+            @submit.prevent="SubmitLogin"
+            class="space-y-6">
                 
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Email address</label>
-                        <input type="email" name="email" 
+                        <input v-model="credentials.email" type="email" name="email" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="saveSmart@gmail.com">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                        <input type="password" name="password" 
+                        <input v-model="credentials.password" type="password" name="password" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="••••••••">
                     </div>
@@ -100,6 +102,16 @@
 </template>
 
   <script>
+ import axios from 'axios';
+
+ const authAxios = axios.create({
+    baseURL: 'http://localhost:8000',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+})
+
   export default {
     methods : {
         toggleForm(formType) {
@@ -125,6 +137,31 @@
       signinTab.classList.add('text-black', 'border-b-2', 'border-black');
       window.location.hash = 'signin-form';
     }
+    }
+  ,
+    SubmitLogin(){
+        authAxios.post('/api/login', this.credentials)
+        .then(Response => {
+           localStorage.setItem('token',Response.data.token)
+        
+           this.$router.push({name : 'tickets'})
+        })
+        .catch(error => {
+            console.error('Login error details:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            })
+           alert('Login faild please check your credentials')
+        } )
+    }
+  },
+  data(){
+    return {
+        credentials : {
+            email : '',
+            password : ''
+        }
     }
   }
   }
