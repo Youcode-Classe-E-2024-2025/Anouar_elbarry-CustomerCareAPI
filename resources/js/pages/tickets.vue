@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data() {
         return {
@@ -171,28 +172,15 @@ export default {
             }
         },
         submitTicket() {
-            // Temporary: Add ticket to local list
-            const newTicketEntry = {
-                id: this.tickets.length + 1,
-                title: this.newTicket.title,
-                description: this.newTicket.description,
-                status: 'Open',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-            }
-
-            this.tickets.unshift(newTicketEntry)
-            this.closeCreateTicketModal()
-
-            // TODO: Implement actual API call to backend
-            // axios.post('/api/tickets', this.newTicket)
-            //     .then(response => {
-            //         this.tickets.unshift(response.data)
-            //         this.closeCreateTicketModal()
-            //     })
-            //     .catch(error => {
-            //         console.error('Error creating ticket:', error)
-            //     })
+            // Implement actual API call to backend
+             axios.post('/api/tickets', this.newTicket)
+                 .then(response => {
+                     this.tickets.unshift(response.data)
+                     this.closeCreateTicketModal()
+                 })
+                 .catch(error => {
+                     console.error('Error creating ticket:', error)
+                 })
         }
     }
 }
