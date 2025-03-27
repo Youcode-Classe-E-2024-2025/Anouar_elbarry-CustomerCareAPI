@@ -35,13 +35,13 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Email address</label>
-                        <input v-model="credentials.email" type="email" name="email" 
+                        <input v-model="loginCredentials.email" type="email" name="email" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="saveSmart@gmail.com">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                        <input v-model="credentials.password" type="password" name="password" 
+                        <input v-model="loginCredentials.password" type="password" name="password" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="••••••••">
                     </div>
@@ -63,7 +63,7 @@
             </form>
 
             <!-- Sign Up Form -->
-            <form id="signup-form" class="hidden space-y-6">
+            <form @submit.prevent="SubmitRegister" id="signup-form" class="hidden space-y-6">
                 
                 <div class="space-y-4">
                     <div>
@@ -74,19 +74,19 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Email address</label>
-                        <input type="email" name="email" 
+                        <input v-model="registerCredentials.email" type="email" name="email" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="saveSmart@gmail.com">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                        <input type="password" name="password" 
+                        <label  class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                        <input v-model="registerCredentials.passwird1" type="password" name="password" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="••••••••">
                     </div>
                     <div>
     <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
-    <input type="password" name="password_confirmation" 
+    <input v-model="registerCredentials.password2" type="password" name="password2" 
         class="w-full px-4 py-3 border border-gray-300 rounded-lg"
         placeholder="Confirm password">
 </div>
@@ -140,7 +140,7 @@
     }
   ,
     SubmitLogin(){
-        authAxios.post('/api/login', this.credentials)
+        authAxios.post('/api/login', this.loginCredentials)
         .then(Response => {
            localStorage.setItem('token',Response.data.token)
         
@@ -155,12 +155,35 @@
            alert('Login faild please check your credentials')
         } )
     }
+  ,
+    SubmitRegister(){
+        authAxios.post('/api/register', this.registerCredentials)
+        .then(Response => {
+           localStorage.setItem('token',Response.data.token)
+        
+           this.$router.push({name : 'tickets'})
+        })
+        .catch(error => {
+            console.error('Register error details:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            })
+           alert('Register faild please check your credentials')
+        } )
+    }
   },
   data(){
     return {
-        credentials : {
+        loginCredentials : {
             email : '',
             password : ''
+        },
+        registerCredentials : {
+            name : '',
+            email : '',
+            passwird1 : '',
+            password2 : '',
         }
     }
   }
