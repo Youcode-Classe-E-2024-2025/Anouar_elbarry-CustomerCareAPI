@@ -43,7 +43,7 @@ class TicketService{
          $ticket= $ticket->update($ticketData);
          return true;
     }catch(\Exception $e){
-        \Log::error($e);
+        \Log::error($e->getMessage());
         return false;
     }
 }
