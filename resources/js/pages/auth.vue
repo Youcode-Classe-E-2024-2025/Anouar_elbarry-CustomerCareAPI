@@ -68,7 +68,7 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                        <input type="text" name="name" 
+                        <input v-model="registerCredentials.name" type="text" name="name" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="saveSmart">
                     </div>
@@ -80,19 +80,27 @@
                     </div>
                     <div>
                         <label  class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                        <input v-model="registerCredentials.passwird1" type="password" name="password" 
+                        <input v-model="registerCredentials.password" type="password" name="password" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black transition-all duration-200"
                             placeholder="••••••••">
                     </div>
                     <div>
+                        <label  class="block text-sm font-semibold text-gray-700 mb-2">Role</label>
+                        <select v-model="registerCredentials.role" name="role" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                        <option value="agent">agent</option>
+                        <option value="client">client</option>
+                        </select>
+                    </div>
+                    <div>
     <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
-    <input v-model="registerCredentials.password2" type="password" name="password2" 
+    <input v-model="registerCredentials.password_confirmation " type="password" name="password_confirmation" 
         class="w-full px-4 py-3 border border-gray-300 rounded-lg"
         placeholder="Confirm password">
 </div>
                 </div>
 
-                <button type="submit" class="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transform hover:scale-[1.02] transition-all duration-200 font-medium">
+                <button type="submit" class="w-full bg-black text-white py-3 px-4 cursor-pointer rounded-lg hover:bg-gray-800 transform hover:scale-[1.02] transition-all duration-200 font-medium">
                     Create Account
                 </button>
             </form>
@@ -137,8 +145,10 @@
       signinTab.classList.add('text-black', 'border-b-2', 'border-black');
       window.location.hash = 'signin-form';
     }
-    }
-  ,
+    },
+    switchToSignIn() {
+      this.toggleForm('signin');
+    },
     SubmitLogin(){
         authAxios.post('/api/login', this.loginCredentials)
         .then(Response => {
@@ -159,9 +169,11 @@
     SubmitRegister(){
         authAxios.post('/api/register', this.registerCredentials)
         .then(Response => {
-           localStorage.setItem('token',Response.data.token)
-        
-           this.$router.push({name : 'tickets'})
+            // Show success message
+            alert('Registration successful! Please log in.');
+            
+            // Switch to login form
+            this.switchToSignIn();
         })
         .catch(error => {
             console.error('Register error details:', {
@@ -169,8 +181,16 @@
                 response: error.response?.data,
                 status: error.response?.status
             })
-           alert('Register faild please check your credentials')
-        } )
+            
+            // Display specific validation errors
+            if (error.response && error.response.data.errors) {
+                const errors = error.response.data.errors;
+                const errorMessages = Object.values(errors).flat();
+                alert(errorMessages.join('\n'));
+            } else {
+                alert('Registration failed. Please check your credentials.')
+            }
+        })
     }
   },
   data(){
@@ -182,8 +202,9 @@
         registerCredentials : {
             name : '',
             email : '',
-            passwird1 : '',
-            password2 : '',
+            password : '',
+            password_confirmation  : '',
+            role  : '',
         }
     }
   }
