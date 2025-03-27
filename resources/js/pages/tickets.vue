@@ -7,7 +7,7 @@
             
             <div v-if="tickets.length === 0" class="p-6 text-center text-gray-500">
                 No tickets found. Create a new support request.
-            </div>
+            </div>  
             
             <div v-else class="divide-y divide-gray-200">
                 <div v-for="ticket in tickets" :key="ticket.id" class="px-6 py-4 hover:bg-gray-50 transition duration-150">
