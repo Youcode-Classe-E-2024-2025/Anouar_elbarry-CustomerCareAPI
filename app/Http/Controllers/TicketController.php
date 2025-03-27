@@ -66,7 +66,7 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(TicketRequest $request, Ticket $ticket)
     {
         $validatedData = $request->validated();
         $ticket = $this->ticketService->update($validatedData,$ticket->id);
