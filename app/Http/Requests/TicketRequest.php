@@ -24,10 +24,8 @@ class TicketRequest extends FormRequest
         return [
             "title" => 'required|string|max:255',
             "description" => 'nullable|string',
-            "priority" => 'nullable|in:low,medium,high,critical',
+            "agent_id" => 'nullable|integer',
             "status" => 'nullable|in:open,in_progress,resolved,closed',
-            "user_id" => 'nullable|exists:users,id',
-            "category" => 'nullable|string|max:100'
         ];
     }
 }
