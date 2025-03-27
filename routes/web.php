@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/{uri}', 'welcome')->where('uri','.*');
+Route::view('/{uri}', 'app')->where('uri','.*');
